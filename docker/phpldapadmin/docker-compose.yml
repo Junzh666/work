@@ -1,0 +1,19 @@
+version: "3"
+services:
+  phpldapadmin:
+    container_name: phpldapadmin-single
+    image: osixia/phpldapadmin:0.9.0-amd64
+    restart: always
+    ports:
+      - 8099:80
+    volumes:
+      - /etc/localtime:/etc/localtime
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=
+      - PHPLDAPADMIN_HTTPS=false
+    deploy:
+      resources:
+        limits:
+           memory: 1G
+        reservations:
+           memory: 256M

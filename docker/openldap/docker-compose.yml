@@ -1,0 +1,57 @@
+version: "3"
+services:
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:1.5.0-amd64
+    restart: always
+    ports:
+      - 389:389
+      - 636:636
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - <LOCAL_DATA_PATH>:/var/lib/ldap
+      - <LOCAL_CONF_PATH>:/etc/ldap/slapd.d
+    environment:
+      LDAP_TLS_VERIFY_CLIENT: never
+      LDAP_ORGANISATION: mydomain
+      LDAP_DOMAIN: mydomain.com
+      LDAP_ADMIN_PASSWORD: <YOUR_PASSWORD>
+      LDAP_CONFIG_PASSWORD: <YOUR_PASSWORD>
+
+    networks:
+      - openldap
+    deploy:
+      resources:
+        limits:
+           memory: 4G
+        reservations:
+           memory: 1G
+
+  phpldapadmin:
+    container_name: phpldapadmin
+    image: osixia/phpldapadmin:0.9.0-amd64
+    restart: always
+    links:
+      - openldap
+    depends_on:
+      - openldap
+    ports:
+      - 8099:80
+    volumes:
+      - /etc/localtime:/etc/localtime
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=<HOST_ADDRESS>
+      - PHPLDAPADMIN_HTTPS=false
+    networks:
+      - openldap
+    deploy:
+      resources:
+        limits:
+           memory: 1G
+        reservations:
+           memory: 256M
+
+networks:
+  openldap:
+
+

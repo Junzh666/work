@@ -1,0 +1,33 @@
+version: '3'
+services:
+  self-service-password:
+    container_name: self-service-password
+    image: tiredofit/self-service-password:latest
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      - LDAP_SERVER=ldap://<LDAP_IP>:389
+      - LDAP_BINDDN=<BIND_DN>
+      - LDAP_BINDPASS=<BIND_PASSWD>
+      - LDAP_BASE_SEARCH=<LDAP_SEARCH_OU>
+      - MAIL_FROM=
+      - MAIL_FROM_NAME=LDAP账号自助服务平台
+      - SMTP_DEBUG=0
+      - SMTP_HOST=
+      - SMTP_USER=
+      - SMTP_PASS=
+      - SMTP_PORT=465
+      - SMTP_SECURE_TYPE=tls
+      - SMTP_AUTH_ON=true
+      - NOTIFY_ON_CHANGE=true
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - <LOG_PATH>:/www/logs
+    deploy:
+      resources:
+        limits:
+           memory: 2G
+        reservations:
+           memory: 512M
+
