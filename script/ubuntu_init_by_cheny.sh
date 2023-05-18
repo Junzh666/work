@@ -17,7 +17,14 @@ apt update
 
 # config ssh with SSH_PUBLIC_KEY
 mkdir -p ~/.ssh
-echo $SSH_PUBLIC_KEY >> ~/.ssh/authorized_keys
+# if SSH_PUBLIC_KEY is in authorized_keys, do nothing
+if [ -f ~/.ssh/authorized_keys ]; then
+    if grep -q "$SSH_PUBLIC_KEY" ~/.ssh/authorized_keys; then
+        echo "SSH_PUBLIC_KEY is already in ~/.ssh/authorized_keys"
+    else
+        echo "$SSH_PUBLIC_KEY" >> ~/.ssh/authorized_keys
+    fi
+fi
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
