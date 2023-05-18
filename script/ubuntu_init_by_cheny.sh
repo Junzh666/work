@@ -2,7 +2,9 @@
 # Author: cheny
 # Created Time: 2023-05-18 10:00:00
 # This script is used to init ubuntu system by myself. It will automatically install some softwares and configure some settings.
-# The script must run as root.
+# The script run as normal user, so you should not run it with sudo command. Sometimes the first 'sudo' command need input user's password,
+# so before you run this first script, you should run 'sudo echo' to input your password. 
+# Remember that you don't run this script with sudo command, because it will install some softwares and configure some settings for root.
 
 # ENV
 SSH_PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCjabJ4UW8Rx50NChKBoHzfxGPNF/caByQ2RPiZUQ69dAzXSxq63+SUhHho2t31LWq8MWy1FjRGuxJXiSju8NTJk5IPU+CLD6IqttZr/CgvHNbGXlZ/MAMuN68tHqKQag90kZDfBqeNlY2NizuYkhrT1Hvxu65hLZbEOrofFLg1KC82BNKwQqjcoLnbpMVi+8CDnEL9MqDA22St4p4K/X/FvOutsiaJ/+p1yQW+ejD6+AUpKSIZAz4YzqBls4sG8sPPlbYC/WPcupACQziqARXhD7WwrlS7jEgMkwvznhAl3InecsECvOx3K3/1Au4vCAAozAb5vbHVXASeJOVAG44KTx3amCbMhyNzvkFMndzlU8XZYojs8ZoARLQLLNmQHpjsw/T55cmQAtVkI/qUVp+gMoLSmL5tRE7xPDOjI9GuEu4CKFokA0I2quVV54aJ3RjM9TII5Xr+0ofGLwzobIw6Hga2oyfzHMoTnkE9logzIjPJRqi4IKf1UsyKf8KNsc8= cheny@=macbook-pro.local"
@@ -31,13 +33,14 @@ chmod 600 ~/.ssh/authorized_keys
 # config /etc/sudoers no password for sudo command
 sudo sed -i 's/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
 
+# install git
+apt install -y git curl wget
+
 # install zsh and oh-my-zsh
 apt install -y zsh
 chsh -s /bin/zsh
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# install git
-apt install -y git
 
 # install vim-runtime with https://github.com/amix/vimrc.git
 apt install -y vim
