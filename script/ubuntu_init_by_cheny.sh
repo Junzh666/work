@@ -16,6 +16,8 @@ fi
 sudo sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 sudo sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 sudo apt update
+sudo apt install -y git curl wget
+
 
 # config ssh with SSH_PUBLIC_KEY
 mkdir -p ~/.ssh
@@ -27,14 +29,16 @@ if [ -f ~/.ssh/authorized_keys ]; then
         echo "$SSH_PUBLIC_KEY" >> ~/.ssh/authorized_keys
     fi
 fi
+
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
+# disenble ssh password permission
+sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+sudo service sshd restart
+
 # config /etc/sudoers no password for sudo command
 sudo sed -i 's/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/g' /etc/sudoers
-
-# install git
-sudo apt install -y git curl wget
 
 # install zsh and oh-my-zsh
 sudo apt install -y zsh
@@ -47,12 +51,11 @@ apt install -y vim
 git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
 sh ~/.vim_runtime/install_awesome_vimrc.sh
 
-# edit ~/.vim_runtime/vimrcs/plugins_config.vim and commit the 50th line
-sed -ie "s/^let g:ctrlp_map.*/\# &/" .vim_runtime/vimrcs/plugins_config.vim
+# edit ~/.vim_runtime/vimrcs/plugins_config.vim and commit the 50th line, 解决run_time中的Ctrl+f快捷键与vim默认的向下翻页冲突的问题
+sed -ie "s/^let g:ctrlp_map.*/\" &/" .vim_runtime/vimrcs/plugins_config.vim
 
-# disenble ssh password permission
-sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-sudo service sshd restart
+echo "ALL is done."
+
 
 
 
